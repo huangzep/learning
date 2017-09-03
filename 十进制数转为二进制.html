@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	
+</body>
+</html>
+<script>
+	/*需求： 十进制转为二进制
+		1.  定义一个数组
+		2. 	二进制每一位的数字是 (n / (Math.pow(2, temp)))) % 2
+		3.	push入每一个数
+
+	*/
+
+	function parse(n = 66) {
+		var arr = [];
+		var temp = 0;
+
+		while(true) {
+
+			arr.push(Math.floor((n / (Math.pow(2, temp)))) % 2);
+			
+			if(num(arr) === n) {
+				return arr.reverse().toString().replace(/,/g, '');
+			}
+			
+			temp++;
+		}
+	}
+
+	parse(0);
+	parse(1);
+	parse(56);
+	parse(256);
+	parse(46);
+
+
+
+
+	function num(arr = [0]) {
+		return arr.reduce((prev, cur, index) => {
+			return prev + cur * Math.pow(2, index);
+		}, 0)
+	}
+
+
+
+
+
+	//方法一
+	function Stack(){
+	    var items = [];
+	    this.push = function(element){ //入栈
+	      return items.push(element);
+	    }
+
+	    this.pop = function(){ //出栈
+	      return items.pop();
+	    }
+
+	    this.peek = function(){  //栈顶
+	      return items[items.length -1 ];
+	    }
+
+	    this.isEmpty = function(){  //栈空
+	      return items.length == 0;
+	    }
+
+	    this.size = function(){  //栈长
+	      return items.length;
+	    }
+
+	    this.print = function(){ //栈输出
+	      console.log(items.toString());
+	    }
+	   }
+
+	  var stack = new Stack();
+	  console.log(stack.isEmpty());
+
+	  stack.push(1);
+
+	  stack.push(2);
+
+	  stack.push(3);
+
+	  console.log(stack.peek());
+
+	  console.log(stack.pop());
+
+	  console.log(stack.size());
+
+	  stack.print();
+
+	// 栈的使用实例一：十进制转二进制(带余除法)
+	 function DataTansfer(num){
+	    var stack = new Stack(),
+	    yushu,
+	    result = '';
+	    while(num>0){
+	      yushu  = Math.floor(num % 2);
+	      stack.push(yushu);
+	      num = Math.floor(num/2);
+	    }
+	    while(!stack.isEmpty()){
+	      result += stack.pop().toString();
+	    }
+	    return result;
+	  }
+
+	console.log(divideBy2(233)); //输出11101001
+	console.log(divideBy2(10)); //输出1010
+	console.log(divideBy2(1000)); //输出1111101000
+
+
+
+	//方法二
+	// 栈的使用实例二：实现任何进制数的转换
+	  function DataTansfer(num,base){
+	    var stack = new Stack(),
+	    yushu,
+	    digitals = '0123456789ABCDEF',
+	    result = '';
+	    while(num>0){
+	      yushu  = Math.floor(num % base);
+	      stack.push(yushu);
+	      num = Math.floor(num/base);
+	    }
+	    while(!stack.isEmpty()){
+	      result += digitals[stack.pop()];
+	    }
+	    return result;
+	  }
+
+	  console.log(DataTansfer(10010,2));
+	  console.log(DataTansfer(10010,8));
+	  console.log(DataTansfer(10010,10));
+	  console.log(DataTansfer(10010,16));
+</script>

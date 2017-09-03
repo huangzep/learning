@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		
+		//观察者构造函数
+		// function Observer(data) {
+		// 	this.data = data;
+		// 	this.walk(data)
+		// }
+
+		// let p = Observer.prototype;
+		// p.walk = function(obj) {
+		// 	let val;
+		// 	for(let key in obj) {
+		// 		if(obj.hasOwnProperty(key)) {
+		// 			val = obj[key];
+		// 			if(typeof val === 'object') {
+		// 				new Observer(val)
+		// 			}
+		// 			this.convert(key, val)
+		// 		}
+		// 	}
+		// }
+
+		// p.convert = function(key, val) {
+		// 	Object.defineProperty(this.data, key, {
+		// 		enumerable: true,
+		// 		configurable: true,
+		// 		get() {
+		// 			console.log('you visit' + key);
+		// 			return val
+		// 		},
+		// 		set(newVal) {
+		// 			console.log('you set' + key);
+		// 			console.log('new' + key + '=' + newVal)
+		// 			val = newVal;
+		// 		}
+		// 	})
+		// }
+
+		// let data = {
+		// 	user: {
+		// 		name: 'zero',
+		// 		age: 24
+		// 	},
+		// 	address: {
+		// 		city: 'guangzhou'
+		// 	}
+		// }
+
+		// let app = new Observer(data)
+
+
+		// //监听数组变化
+		// const aryMethods = ['push', 'pop', 'shift', 'unshift', 'splice', 'sort', 'reverse']
+		// const arrayAugmentations = []
+
+		// aryMethods.forEach((method) => {
+		// 	let original = Array.prototype[method];
+		// 	arrayAugmentations[method] = function() {
+		// 		console.log('I am changed')
+		// 		console.log(this)
+		// 		//调回对应的原生方法
+		// 		return original.apply(this, arguments)
+		// 	}
+		// })
+
+		// let list = ['a', 'b', 'c']
+		// list.__proto__ = arrayAugmentations;
+		// list.push('d')
+
+
+		//组合继承的方法实现监听数组
+		function FakeArray() {
+			Array.call(this, arguments)
+		}
+
+		FakeArray.prototype = [];
+		FakeArray.prototype.constructor = FakeArray;
+
+		FakeArray.prototype.push = function() {
+			console.log('I am changed')
+			console.log(this)
+			return Array.prototype.push.call(this, arguments)
+		}
+
+		let list = ['a', 'b', 'c']
+		let fakeList = new FakeArray(...list)
+
+		class FakeArray extends Array {
+			push(...args) {
+				console.log('I am changed')
+				return super.push(...args)
+			}
+		}
+		var list = [1, 2, 3]
+		var arr = new FakeArray(...list);
+		console.log(arr.length)
+		arr.push(3)
+		console.log(arr)
+	</script>
+</body>
+</html>

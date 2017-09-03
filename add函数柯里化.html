@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>add函数柯里化</title>
+</head>
+<body>
+	<script>
+		function factorial(n, total = 1) {
+			if(n < 2) {
+				return total;
+			}
+			return factorial(n-1, n*total)
+		}
+
+
+		function add() {
+			var args = Array.prototype.slice.call(arguments);
+
+			var fn = function() {
+				var inner_args = Array.prototype.slice.call(arguments);
+				return add.apply(null, args.concat(inner_args))
+			}
+
+			fn.toString = function() {
+				return args.reduce(function(a, b) {
+					return a + b;
+				})
+			}
+
+			return fn;
+		}
+
+		console.log(add(3)(5)(4))
+	</script>
+</body>
+</html>

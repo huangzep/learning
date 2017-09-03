@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>jQuery</title>	
+</head>
+<body>
+	<div id="div">aaaa
+		<p>dfd</p>
+	</div>
+</body>
+</html>
+<script src="jquery.js"></script>
+<script>
+
+	var aQuery = function(selector, context) {
+		return  new aQuery.prototype.init(selector, context);
+	}
+	aQuery.fn = aQuery.prototype = {
+		init: function(selector, context, rootaQuery) {
+			var match, elem;
+
+			if(!selector) {
+				return this;
+			}
+			if(typeof selector === 'string') {
+				if (selector.charAt(0) === "<" && selector.charAt(selector.length - 1) === ">" && selector.length >= 3) {
+					match = [ null, selector, null ];
+				　	        	} else {
+					match = rquickExpr.exec(selector);
+				}
+				if ( match && (match[1] || !context) ) {
+					if (match[1]) {
+						context = context instanceof aQuery ? context[0] : context;
+						jQuery.merge(this, jQuery.parseHTML(match[1], context && context.nodeType ? context.ownerDocument || context : document, true));
+						if(rsingleTag.test(match[1]) && jQuery.isPlainObject(context)) {
+							for(match in context) {
+								if(jQuery.isFunction(this[match])) {
+									this[match](context[match])
+								} else {
+									this.attr(match, context[match])
+								}
+							}
+						}
+					} else {
+						elem = document.getElementById(match[2]);
+						if(elem && elem.parentNode) {
+							this.length	= 1;
+							this[0] = elem;
+						}
+						this.context = document;
+						this.selector = selector;
+						return this;
+					}
+				}
+	        } else if(selector.nodeType) { // HANDLE: $(DOMElement)
+	        	
+
+	        } else if(jQuery.isFunction(selector)) {  // HANDLE: $(function) 
+	        	return rootaQuery.ready(selector) 
+	        }
+	        if(selector.selector !== undefined) {
+	        	this.selector = selector.selector;
+	        	this.context = selector.context;
+	        }
+	        return jQuery.makeArray(selector, this);
+	    }	    
+	}
+
+	aQuery.prototype.init.prototype = aQuery.prototype;
+
+	//选择器正则表达式  匹配HTML标记和ID表达式
+	var rquickExpr = /^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]*))$/,
+		rsingleTag = /^<(\w+)\s*\/?>(?:<\/\1>|)$/
+
+	//extend方法扩展
+	aQuery.extend = aQuery.fn.extend = function() {
+		var src, copyIsArray, copy, name, options, clone, 
+		target = arguments[0] || {},
+		i = 1,
+		length = arguments.length,
+		deep = false;
+
+		if(typeof target === 'boolean') {
+			deep = target;
+			target = arguments[1] || {}
+			i = 2;
+		}
+
+		if(typeof target !== 'object' && !jQuery.isFunction(target)) {
+			target = {}
+		}
+
+		if(length === i) {
+			target = this;
+			--i;
+		}
+
+		for(; i < length; i++) {
+			if((options = arguments[i]) != null) {
+				for(name in options) {
+					src = target[name];
+					copy = options[name];
+
+					//prevent never-ending loop
+					if(target === copy) {
+						continue;
+					}
+
+					if(deep && copy && ( jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)) )) {
+						if(copyIsArray) {
+							copyIsArray = false;
+							clone = src && jQuery.isArray(src) ? src : [];
+						} else {
+							clone = src && jQuery.isPlainObject(src) ? src : {}
+						}
+						target[name] = aQuery.extend(deep, clone, copy); 
+
+					} else if(copy !== undefined) {
+						target[name] = copy;
+					}
+				}
+			}
+		}
+
+		return target;
+	}
+
+	aQuery.fn.parseHTML = function(data, context, keepScripts) {
+		if(!data || typeof data !== 'string') {
+			return null;
+		}
+		if(typeof context === 'boolean') {
+			keepScripts = context;
+			context = false;
+		}
+		context = context || document;
+		var parsed = rsingleTag.exec(data),
+			scripts = !keepScripts && [];
+		//single tag
+		if(parsed) {
+			return [context.createElement(parsed[1])]
+		}
+		parsed = jQuery.buildFragment([data], context, scripts);
+		if(scripts) {
+			jQuery(scripts).remove();
+		}
+		return jQuery.merge([], parsed.childNodes);
+	}
+
+	
+	console.log(rsingleTag.exec('<div></div>'))
+
+
+
+
+
+</script>
+
+<script>
+	console.log($('div p'))
+</script>

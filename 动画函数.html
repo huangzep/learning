@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript">
+
+		function animate(element, json, fn) {
+			clearInterval(element.timer)
+			element.timer = setInterval(function() {
+				var flag = true;
+				for(var key in json) {
+					if(key === 'opacity') {
+						var current = getStyle(element, key) * 100 || 0,
+							target = json[key] * 100,
+							step = (target - current) / 10;
+							step = step > 0 ? Math.ceil(step) : Math.floor(step);
+						current += step;
+						element.style[key] = current / 100;
+					} else if(key === 'zIndex') {
+						element.style[key] = json[key]
+					} else {
+						var current = parseInt(getStyle(element, key)) || 0,
+							target = json[key] ;
+							step = (target - current) / 10;
+						step = step > 0 ? Math.ceil(step) : Math.floor(step)
+						current += step;
+						element.style[key] = current + 'px'
+
+					}
+					if(current !== target) {
+						flag = false;
+					}
+				}
+				if(flag) {
+					clearInterval(element.timer)
+					(typeof fn === 'function' && fn())
+				}
+			}, 20)
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>大主宰</title>
+</head>
+<body>
+   <script src="jquery.js"></script>
+   <script>
+     //factory model
+     var T = function(selector) {
+      this.init(selector)
+     }
+
+     T.prototype = {
+      splice: [].splice,
+      length: 0, 
+      init(selector) {
+        var ele = document.querySelectorAll(selector);
+        for(var i = 0; i < ele.length; i++) {
+          this[i] = ele[i];
+        }
+        this.length = ele.length;
+        return this;
+      },
+      addClass(className) {
+        for(var i = 0; i < this.length; i++) {
+          this[i].classList.add(className)
+        }
+        return this;
+      },
+      removeClass(className) {
+        for(var i = 0; i < this.length; i++) {
+          this[i].classList.remove(className)
+        }
+        return this;
+      }
+     }
+
+     var t = new T('body')
+     t.addClass('bb').removeClass('bb')
+
+
+   </script>
+</body>
+</html>

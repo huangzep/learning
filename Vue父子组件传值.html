@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>VUE</title>
+	<style>
+		body {
+			font-family: Helvetica Neue, Arial, sans-serif;
+			font-size: 14px;
+			color: #444;
+		}
+
+		table {
+			border: 2px solid #42b983;
+			border-radius: 3px;
+			background-color: #fff;
+		}
+
+		th {
+			background-color: #42b983;
+			color: rgba(255,255,255,0.66);
+			cursor: pointer;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		td {
+			background-color: #f9f9f9;
+		}
+
+		th, td {
+			min-width: 120px;
+			padding: 10px 20px;
+		}
+
+		th.active {
+			color: #fff;
+		}
+
+		th.active .arrow {
+			opacity: 1;
+		}
+
+		.arrow {
+			display: inline-block;
+			vertical-align: middle;
+			width: 0;
+			height: 0;
+			margin-left: 5px;
+			opacity: 0.66;
+		}
+
+		.arrow.asc {
+			border-left: 4px solid transparent;
+			border-right: 4px solid transparent;
+			border-bottom: 4px solid #fff;
+		}
+
+		.arrow.dsc {
+			border-left: 4px solid transparent;
+			border-right: 4px solid transparent;
+			border-top: 4px solid #fff;
+		}
+	</style>
+</head>
+<body>
+	<div id="demo">
+		<form action="">
+			Search <input type="text" v-model="searchQuery">
+		</form>
+		<demo-grid
+		 v-bind:columns="gridColumns"
+		 v-bind:data="gridRows"
+		 v-bind:filter-key="searchQuery"></demo-grid>
+	</div>
+</body>
+</html>
+<script src="https://unpkg.com/vue"></script>
+<script type="text/template" id="dtpl">
+	<table>
+		<thead>
+			<tr>
+				<th v-for="key in columns"
+					v-on:click="sortBy(key)"
+					v-bind:class=" {active: sortKey === key} ">
+					{{key | capitalize}}
+					<span class="arrow" v-bind:class="sortOrders[key] > 0 ? 'asc' : 'dsc' "></span>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr v-for="entry in filteredData">
+				<td v-for="key in columns">
+					{{entry[key]}}
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</script>
+<script>
+	/*
+		需求：
+			a 根据name power 属性排序
+			b 根据input 值排序
+
+		代码实现：
+			1.注册父组件
+			2.注册子组件
+			3.父组件传值 columns data filterKey
+			4.子组件 计算属性 filteredData 
+								sortKey 存储排序依据的属性
+								filterKey 存储input的查询值
+	*/
+
+	//子组件
+	var demoGrid = {
+		template: '#dtpl',
+		props: {
+			data: Array,
+			columns: Array,
+			filterKey: String
+		},
+		data() {
+			var sortOrders = {}
+			this.columns.forEach(function (key) {
+				sortOrders[key] = 1
+			})
+			return {
+				sortKey: '',
+				sortOrders
+			}
+		},
+		computed: {
+			filteredData() {
+				var data = this.data
+				var filterKey = this.filterKey && this.filterKey.toLowerCase()
+				var sortKey = this.sortKey
+				var order = this.sortOrders[sortKey] || 1
+
+				if (filterKey) {
+					data = data.filter(function (row) {
+						return Object.keys(row).some(function (key) {
+							return String(row[key]).toLowerCase().indexOf(filterKey) > -1
+						})
+					})
+				}
+				if (sortKey) {
+					data = data.sort(function (a, b) {
+						a = a[sortKey]
+						b = b[sortKey]
+						return (a === b ? 0 : a > b ? 1 : -1) * order
+					})
+				}
+				return data
+			}
+		},
+		filters: {
+			capitalize(v) {
+				return v.charAt(0).toUpperCase() + v.slice(1)
+			}
+		},
+		methods: {
+			sortBy(key) {
+				this.sortKey = key
+				this.sortOrders[key] *= -1
+			}
+		}
+	}
+
+
+	//父组件
+	new Vue({
+		el: '#demo',
+		components: {
+			demoGrid
+		},
+		data: {
+			gridRows: [
+				{name: 'cc', power: Infinity},
+				{name: 'cl', power: 800},
+				{name: 'vv', power: 333},
+				{name: 'vl', power: -Infinity}
+			],
+			gridColumns: ['name', 'power'],
+			searchQuery: ''
+		}
+	})
+</script>

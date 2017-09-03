@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		var money= [20,10,5,1]; 
+
+	  /*
+	   * m[]:存放可供找零的面值，降序排列 
+	   * n:需要找零数 
+	   */ 
+	   function greedyMoney(m,n){ 
+	   	for(var i=0;i<m.length;i++){ 
+	   		while(n>=m[i] && n>0){ 
+	   			document.write(m[i]+" "); 
+	   			n = n-m[i]; 
+	   		} 
+	   	} 
+	   	document.write("<br>"); 
+	   }
+
+	   greedyMoney(money,73);
+	   greedyMoney([25,10,1],63);
+
+
+	   //孩子分饼干问题
+		/**
+		 * @param {number[]} g
+		 * @param {number[]} s
+		 * @return {number}
+		 */
+		var findContentChildren = function (g, s) {
+		  var sortFunc = function (a, b) {
+		    return a - b;
+		  };
+		  g.sort(sortFunc);
+		  s.sort(sortFunc);
+		  var i = 0;
+		  for (var j = 0; i < g.length && j < s.length; j++) {
+		    if (g[i] <= s[j]) {
+		      i++;
+		    }
+		  }
+		  return i;
+		};
+	</script>
+</body>
+</html>

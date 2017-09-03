@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>VUE</title>
+	<style>
+		
+	</style>
+</head>
+<body>
+	<template>
+		<div class="post">
+			<div class="loading" v-if="loading">
+				Loading
+			</div>
+			<div class="error" v-if="error">
+				{{error}}
+			</div>
+			<div class="content" v-if="post">
+				<h2> {{post.title}} </h2>
+				<p> {{post.body}} </p>
+			</div>
+		</div>
+	</template>
+</body>
+</html>
+<script src="jquery.js"></script>
+
+<script src="https://unpkg.com/vue"></script>
+
+
+<script>
+	export default {
+		data() {
+			return {
+				loading: false,
+				post: null,
+				error: null
+			}
+		},
+		created() {
+			this.fetchData()
+		},
+		watch: {
+			'$route': 'fetchData'
+		},
+		methods: {
+			fetchData() {
+				this.error = this.post = null
+				this.loading = true
+				//replace getPost with your data fecthing
+				getPost(this.$route.params.id, (err, post) => {
+					this.loading = false
+					if (err) {
+						this.error = err.toString()
+					} else {
+						this.post = post
+					}
+				})
+			}
+		}
+	}
+
+
+	export default {
+		data() {
+			return {
+				post: null,
+				error: null
+			}
+		},
+		beforeRouteEnter(to, from, next) {
+			getPost(to.params.id, (err, post) => {
+				if (err) {
+					next(false)
+				} else {
+					next(vm => {
+						vm.post = post
+					})
+				}
+			})
+		},
+		watch: {
+			$route() {
+				this.post = null
+				getPost(this.$route.params.id, (err, post) => {
+					if (err) {
+						this.error = err.toString()
+					} else {
+						this.post = post
+					}
+				})
+			}
+		}
+	}
+</script>

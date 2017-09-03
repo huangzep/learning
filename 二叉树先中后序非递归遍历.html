@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	
+</body>
+</html>
+<script>
+	var tree = {
+	  value: 1,
+	  left: {
+	    value: 2,
+	    left: {
+	      value: 4
+	    }
+	  },
+	  right: {
+	    value: 3,
+	    left: {
+	      value: 5,
+	      left: {
+	        value: 7
+	      },
+	      right: {
+	        value: 8
+	      }
+	    },
+	    right: {
+	      value: 6
+	    }
+	  }
+
+	//广度优先遍历
+	var levelOrderTraversal = function(node) {
+	  if(!node) {
+	    throw new Error('Empty Tree')
+	  }
+
+	  var que = []
+	  que.push(node)
+	  while(que.length !== 0) {
+	    node = que.shift()
+	    console.log(node.value)
+	    if(node.left) que.push(node.left)
+	    if(node.right) que.push(node.right)
+	  }
+	}
+
+	//先序递归算法
+	var preOrder = function (node) {
+	  if (node) {
+	    console.log(node.value);
+	    preOrder(node.left);
+	    preOrder(node.right);
+	  }
+	}
+
+	//中序递归算法
+	var inOrder = function (node) {
+	  if (node) {
+	    inOrder(node.left);
+	    console.log(node.value);
+	    inOrder(node.right);
+	  }
+	}
+
+	//后序递归算法
+	var postOrder = function (node) {
+	  if (node) {
+	    postOrder(node.left);
+	    postOrder(node.right);
+	    console.log(node.value);
+	  }
+	}
+
+	//非递归深度优先遍历
+	var preOrderUnRecur = function(node) {
+	  if(!node) {
+	    throw new Error('Empty Tree')
+	  }
+	  var stack = []
+	  stack.push(node)
+	  while(stack.length !== 0) {
+	    node = stack.pop()
+	    console.log(node.value)    
+	    if(node.right) stack.push(node.right)
+	    if(node.left) stack.push(node.left)
+	  }
+	}
+
+
+	var inOrderUnRecur = function(node) {
+	  if(!node) {
+	    throw new Error('Empty Tree')
+	  }  
+	  var stack = []
+	  while(stack.length !== 0 || node) {
+	    if(node) {
+	      stack.push(node)
+	      node = node.left
+	    } else {
+	      node = stack.pop()
+	      console.log(node.value)
+	      node = node.right
+	    }
+	  }
+	}
+
+
+	var posOrderUnRecur = function(node) {
+	  if(!node) {
+	    throw new Error('Empty Tree')
+	  }
+	  var stack = []
+	  stack.push(node)
+	  var tmp = null
+	  while(stack.length !== 0) {
+	    tmp = stack[stack.length - 1]
+	    if(tmp.left && node !== tmp.left && node !== tmp.right) {
+	      stack.push(tmp.left)
+	    } else if(tmp.right && node !== tmp.right) {
+	      stack.push(tmp.right)
+	    } else {
+	      console.log(stack.pop().value)
+	      node = tmp
+	    }
+	  }
+	}
+
+
+	var posOrderUnRecur = function(node) {
+	  if(node) {
+	    var s1 = []
+	    var s2 = []
+	    s1.push(node)
+	    while(s1.length !== 0) {
+	      node = s1.pop()
+	      s2.push(node)
+	      if(node.left) {
+	        s1.push(node.left)
+	      }
+	      if(node.right) {
+	        s1.push(node.right)
+	      }
+	    }
+	    while(s2.length !== 0) {
+	      console.log(s2.pop().value);
+	    }
+	  }
+	}
+</script>

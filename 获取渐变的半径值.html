@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>zero</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			transition: all 1s ease-in-out;
+		}
+		.path {
+			width: 400px;
+			height: 400px;
+			border-radius: 50%;
+			margin-top: 80px;
+			background: radial-gradient(circle 2px at 200px 200px, red 0%, orange 30%, yellow 50%, green 70%, blue 90%, purple 100%);
+			transform: rotate(30deg) scale(1);		
+		}
+		
+
+		
+	</style>
+
+</head>
+<body>
+	
+	<div class="path" id="path">     
+		 
+	</div>
+
+
+	<script src="jquery.js"></script>
+	<script type="text/javascript">
+		//获取渐变半径值
+		// window.getComputedStyle(path).background.replace(/radial-gradient\((\d)px at\s.*/, function(match, $1, $2) {console.log($1, $2)})
+		
+		window.getComputedStyle(path).background.replace(/radial\-gradient\((\d+)px at\s.*/g, function(match, $1, $2) {alert($1,$2)})
+
+
+		function getRadial(id) {
+			return window.getComputedStyle(id).background.replace(/radial\-gradient\((\d+)px at\s.*/g, function(match, $1) {return $1}).replace(/rgba\(.*\)/g, '')
+		}
+
+		var timer = setInterval(() => {
+			var r = parseInt(getRadial(path));
+			r += 4;
+			path.style.background = `radial-gradient(${r}px at 200px 200px, red 0%, orange 30%, yellow 50%, green 70%, blue 90%, purple 100%)`
+		}, 100)
+	</script>
+</body>
+</html>

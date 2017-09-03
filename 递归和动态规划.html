@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TIAN DAO</title>
+</head>
+<body>
+  <script>
+    /*
+      demand: a[1]a[2]...a[m] => b[1]b[2]...b[n] 
+              d[m][n]
+      递归
+              if(a[m] === b[n]) 
+                1.d[m][n] === d[m-1][n-1]
+
+              if(a[m] !== b[n])
+                1. xyz => efg;  xy => efg + 1; d[m][n] === d[m-1][n] + 1
+                2. xyz => efg; xyzg => efg + 1; xyz => ef + 1; d[m][n] = d[m][n-1] + 1 
+                3. xyz => efg; xyg => efg + 1; xy => ef + 1; d[m][n] = d[m-1][n-1] + 1;
+
+              if(m = 0) d[m][n] = n
+              if(n = 0) d[m][n] = m
+    */
+
+      function recursion(a, b, i, j) {
+        if(i = 0) return j;
+        if(j = 0) return i;
+
+        if(a[i-1] === b[j-1]) {
+          return recursion(a, b, i-1, j-1);
+        }
+
+        if(a[i] !== b[j]) {
+          return Math.min(recursion(a, b, i-1, j) + 1, recursion(a, b, i, j-1) + 1, recursion(a, b, i-1, j-1) + 1);
+        }
+      }
+
+      // recursion('gold', 'yellow', 4, 6)
+
+
+      /*
+        动态规划
+      */
+      function dynamicPlanning(a, b) {
+        let lenA = a.length;
+        let lenB = b.length;
+        let d = [];
+        d[0] = [];
+
+        for(let j = 0; j <= lenB; j++) {
+          d[0].push(j);
+        }
+
+        for(let i = 0; i <= lenA; i++) {
+          if(d[i]) {
+            d[i][0] = i;
+          } else {
+            d[i] = [];
+            d[i][0] = i;
+          }
+        }
+
+        for(let i = 1; i <= lenA; i++) {
+          for(let j = 1; j <= lenB; j++) {
+            if(a[i-1] === b[j-1]) {
+              d[i][j] = d[i-1][j-1];
+            } else {
+              let m1 = d[i-1][j] + 1;
+              let m2 = d[i][j-1] + 1;
+              let m3 = d[i-1][j-1] + 1;
+              d[i][j] = Math.min(m1, m2, m3)
+            }
+          }
+        }
+
+        return d[lenA][lenB];
+      }
+
+      dynamicPlanning('gold', 'yellow')
+
+
+      function dynamicPlanning(a, b) {
+        let lenA = a.length;
+        let lenB = b.length;
+        let d = [];
+
+        for(let i = 0; i <= lenA; i++) {
+          d[i] = [i]
+        }
+
+        for(let i = 1; i <= lenB; i++) {
+          d[0].push(i)
+        }
+
+        for(let i = 1; i <= lenA; i++) {
+          for(let j = 1; j <= lenB; j++) {
+            if(a[i-1] === b[i-1]) {
+              d[i][j] = d[i-1][j-1];
+            } else {
+              let m1 = d[i-1][j] + 1;
+              let m2 = d[i][j-1] + 1;
+              let m3 = d[i-1][j-1] + 1;
+              d[i][j] = Math.min(m1, m2, m3)
+            }
+          }
+        }
+
+        return d[lenA][lenB];
+      }
+  </script>
+</body>
+</html>

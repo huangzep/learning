@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>和为定值</title>
+</head>
+<body>
+	
+</body>
+</html>
+<script>
+	//借助散列表：先构建一个散列表，存储数组每个值。然后遍历数组，查看 target 与每项的差是否在散列表中，如果在就返回两个值。这个方法的时间复杂度和空间复杂度均为O(n)。代码示例如下：
+	var twoSum = function(nums, target) {
+		var map = {}
+		for(var i = 0; i < nums.length; i++) {
+			if(nums[i] in map) {
+				return [map[nums[i]], i]
+			} else {
+				map[target - nums[i]] = i
+			}
+		} 
+	}
+
+
+	//双指针两端扫描：若数组无序，就先排序后扫描。扫描方法是用两个指针 i 和 j，先放在数组首尾，如果指向的两个数之和大于 target ，就 j--，否则 i++，直到两个数之和为 target，然后返回这两个数。该方法的时间复杂度最后为：有序O(n)，无序O(nlogn + n)=O(nlogn)，空间复杂度都为O(1)。代码示例如下：
+	var twoSum = function(nums, target) {
+		var l = 0,
+			r = nums.length - 1,
+			nums = nums.sort((a, b) => {return a - b;})
+			results = [];
+		while(l < r) {
+			var s = nums[l] + nums[r];
+			if(s === target) {
+				results.push([l, r])
+				while(l < r && nums[l] === nums[l + 1]) {
+					l++;
+				} 
+				while(r > l && nums[r] === nums[r - 1]) {
+					r++;
+				}
+				l++;
+				r--;
+			} else if(s < target) {
+				l++;
+			} else {
+				r--;
+			}
+		}
+		return results;
+	}
+
+
+	twoSum([2, 7, 4, 1], 5)
+</script>

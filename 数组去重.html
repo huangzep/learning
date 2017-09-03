@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>数组去重</title>
+</head>
+<body>
+	<script type="text/javascript">
+		function unique(arr) {
+			const seen = new Map()
+			return arr.filter((element) => {
+				return !seen.has(element) && seen.set(element, 0)
+			})
+		}
+
+		function unique(arr) {
+			var obj = {}
+			return arr.filter((element) => {
+				return !obj.hasOwnProperty(element) && (obj[element] = 1)
+			})
+		}
+
+		function unique (arr) {
+		  return Array.from(new Set(arr))
+		}
+
+		console.log(unique([3, 'a', 3, 'a']))
+	</script>
+</body>
+</html>

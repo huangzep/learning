@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE> 循环赛事日程表  </TITLE>
+  <META NAME="Generator" CONTENT="EditPlus">
+    <META NAME="Author" CONTENT="">
+      <META NAME="Keywords" CONTENT="">
+        <META NAME="Description" CONTENT="">
+        <script type="text/javascript" src="jquery.js"></script>
+          <!-- <script type="text/javascript" src="json2.js"></script> -->
+          <style>
+            table,td{
+              border:1px solid gray;
+              text-align:center;
+            }
+          </style>
+          <script>
+            var arr=[];
+            var calc_num=0;
+    
+      $(function(){
+      for(var i=0;i<8;i++){
+      arr.push(new Array());
+    }
+      game(3,8);
+    for(var i=0;i<arr.length;i++){
+       for(var j=0;j<arr[i].length;j++){
+           document.write(arr[i][j]+"  ");
+       }
+       document.write("<br/>");
+    }
+  })
+
+  function init(){
+    arr=[];
+    calc_num=0;
+    var num=Math.pow(2,parseInt($("#txt_k").val()));
+    for(var i=0;i<num;i++){ 
+      arr.push(new Array());
+    }
+    for(var i=0;i<num;i++)
+        arr[0][i]=i+1;//设置日程表第一行
+      initTable();
+    }
+
+    function initTable(){
+      $("#container").html('');
+      var table=$("<table></table>");
+      var num=Math.pow(2,parseInt($("#txt_k").val()));
+      var width=document.body.clientWidth*0.4/num;
+    //alert(num+":"+width);
+    for(var i=0;i<num;i++){
+     var tr=$("<tr style='width:"+width*num+"px;height:"+width+"px;'></tr>");
+     for(var j=0;j<num;j++){
+       var td=$("<td style='width:"+width+"px;height:"+width+"px;'> </td>");
+       if(i==0)
+        td.text(j+1);
+      tr.append(td);
+    }
+    table.append(tr);
+  }
+  $("#container").append(table);
+}
+function calc(){
+  var num=parseInt($("#txt_k").val());
+  if(calc_num<num){
+   game(calc_num,Math.pow(2,num-calc_num-1));
+   calc_num++;
+ }
+ else
+   alert("计算完毕，请重新初始化");
+}
+
+
+function game(k,n){      
+       var m=Math.pow(2,k);//填充起始位置
+     //for(var s=0;s<k;s++){
+        //n=parseInt(n/2);
+      for(var t=0;t<n;t++){//控制次数
+        for(var i=m;i<m*2;i++){//i控制行
+         for(var j=m;j<m*2;j++){//j控制列           
+           // alert("arr["+i+"]["+(j+t*m*2)+"]="+arr[i-m][j+t*m*2-m]);
+             arr[i][j+t*m*2]=arr[i-m][j+t*m*2-m];//右下角等于左上角
+             $("table tr").eq(i).find("td").eq(j+t*m*2).text(arr[i][j+t*m*2]);
+             // alert("arr["+i+"]["+(j+t*m*2-m)+"]="+arr[i-m][j+t*m*2]);
+           arr[i][j+t*m*2-m]=arr[i-m][j+t*m*2];//左下角等于右上角
+           $("table tr").eq(i).find("td").eq(j+t*m*2-m).text(arr[i][j+t*m*2-m]);
+         }
+       }
+     }
+     //m=m*2;
+     //}
+
+
+   }
+
+
+ </script>
+</HEAD>
+<BODY style="text-align:center">
+  级数：
+  <input type="text" name="arr1" id="txt_k" style="width:60px" value="3"/>
+  <input type="button" value="初始化" onclick="init()"/>
+  <input type="button" value="下一步" onclick="calc()"/>
+  <br/>
+  <div id="container" style="margin:0 auto;"></div>
+</BODY>
+</HTML>

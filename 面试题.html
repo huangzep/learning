@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		// 有1到10w这个10w个数，去除2个并打乱次序，如何找出那两个数？
+
+		/*
+			1、位图的方法：  
+			假设待处理数组为A[10w-2]  
+			定义一个数组B[10w],这里假设B中每个元素占用1比特,并初始化为全0  
+			for(i=0;i <10w-2;i++)  
+			{  
+			 B[ A[i] ]=1  
+			}  
+			那么B中为零的元素即为缺少的数据  
+
+
+			2.求得两个数的和 平方和
+			x + y = m
+			x^2 + y^2 = n
+			x2 + m2 -2mx +x2 =n
+			2x2 -2mx + m2 -n = 0
+			x =  m +- 根号（2n-m2）/2
+
+		*/
+
+
+
+		function search(A, B = [], C = []) {
+			for(var i = 0; i < 100; i++) {
+				B[i] = 0;
+			}
+			//遍历A中数组值
+			for(var j = 0; j < A.length; j++) {
+				B[A[j]] = 1;
+			}
+			for(var k = 0; k < B.length; k++) {
+				if(B[k] === 0) {
+					C.push(k)
+				}
+			}
+			return C;
+		}
+
+		function search(A, B = []) {
+			for(var i = 0; i < 100; i++) {
+				B[i] = i;
+			}
+			var m = getSum(B) - getSum(A)
+			var n = getSqr(B) - getSqr(A)
+			return [(m + Math.sqrt(n * 2 - Math.pow(m, 2))) / 2, (m - Math.sqrt(n * 2 - Math.pow(m, 2))) / 2]
+
+			function getSum(arr = []) {
+				return arr.reduce((pre, cur) => {
+					return pre + cur;
+				})
+			}
+			function getSqr(arr = []) {
+				return arr.reduce((pre, cur) => {
+					return pre + Math.pow(cur, 2)
+				})
+			}
+		}
+
+		search([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59,61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99])
+
+
+
+		//构造函数
+		// function Student(name, gender, age) {			
+		// 	return {name, gender, age, 
+		// 			sayHello() {
+		// 				console.log('我是' + this.name + ', ' + this.gender + ', 我今年' + this.age)
+		// 			}
+		// 	}
+		// }
+
+		// var s = new Student('cc', 'girl', 23)
+
+		//冒泡排序
+		// function bubbleSort(arr) {
+		// 	for(var i = 0, len = arr.length; i < len - 1; i++) {
+		// 		for(var j = 0; j < len - 1 - i; j++) {
+		// 			if(arr[j] > arr[j+1]) {
+		// 				var temp = arr[j];
+		// 				arr[j] = arr[j+1];
+		// 				arr[j+1] = temp;
+		// 			}
+		// 		}
+		// 	}
+		// 	return arr
+		// }
+
+		// bubbleSort([3, 2, 5])
+	</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>链表结构</title>
+</head>
+<body>
+	
+</body>
+</html>
+<script>
+	function LinkedList() {
+		var Node = function(element) {
+			this.element = element;
+			this.next = null;
+		}
+		var length = 0;
+		var head = null;
+
+		this.append = function(element) {
+			var node = new Node(element);
+			var current;
+
+			if(head === null) {
+				head = node;
+			} else {
+				current = head;
+				while(current.next) {
+					current = current.next;
+				}
+				console.log(current);
+				current.next = node;
+			}
+			length++;
+		}
+		this.toString = function() {
+			var current = head,
+				string = '';
+			while(current) {
+				string += current.element + (current.next ? ',' : '');
+				current = current.next;
+			}
+			return string;
+		}
+		this.removeAt = function(position) {
+			if(position > -1 && position < length) {
+				var current = head,
+					previous,
+					index = 0;
+				if(position === 0) {
+					head = current.next;
+				} else {
+					while(index < position) {
+						previous = current;
+						current = current.next;
+						index++;
+					}
+					previous.next = current.next;
+				}
+				length--;
+				return current.element;
+			}
+			return null;
+		}
+		this.insert = function(position, element) {
+			if(position > -1 && position <= length) {
+				var node = new Node(element),
+					current = head,
+					previous,
+					index = 0;
+				if(position === 0) {
+					node.next = current;
+					head = node;
+				} else {
+					while(index < position) {
+						previous = current;
+						current = current.next;
+						index++;
+					}
+					node.next = current;
+					previous.next = node;
+				}
+				length++;
+				return true;
+			}
+			return false;
+		}
+		this.indexOf = function(element) {
+			var current = head,
+				index = 0;
+			while(current) {
+				if(element === current.element) {
+					return index;
+				}
+				index++;
+				current = current.next;
+			}
+			return -1;
+		}
+	}
+</script>

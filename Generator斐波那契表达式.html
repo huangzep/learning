@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		function *fibonacci() {
+			let [prev, curr] = [0, 1]
+			for(; ;) {
+				[prev, curr] = [curr, prev + curr];
+				yield curr;
+			}
+		}
+
+		for(let n of fibonacci()) {
+			if(n > 1000) break;
+			console.log(n)
+		}
+	</script>
+</body>
+</html>

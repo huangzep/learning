@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+	/*
+		1. 每个运算符前后都是数字
+			去掉所有空格
+			1用正则获取到每一个运算符
+			2每个运算符前后是数字
+			3遍历数组的
+		2. 每对括号要对应
+
+
+		BUG
+			1 数字中有0
+			2 有两个加号
+	*/
+		// function confirm(expression = '1 + 1') {
+		// 	var arr, flag = true;
+		// 	//delete space
+		// 	expression = expression.replace(/ /g, '')
+
+		// 	flag = zero(expression)
+
+		// 	arr = expression.match(/([\+]{1})|([\-]{1})|([\*]{1})|([\/]{1})/g)
+
+		// 	arr.forEach((ele) => {
+		// 		var index = expression.indexOf(ele);
+		// 		if(index === 0) flag = false;
+		// 		if( !/^\d*$/.test(expression[index-1]) ) flag = false;
+		// 		if( !/^\d*$/.test(expression[index+1]) ) flag = false
+		// 		expression = expression.substring(index+2)
+		// 	})
+
+		// 	return flag;
+		// }
+
+		// function zero(exp) {
+		// 	if(exp.indexOf('0') === -1) return true;
+		// 	var index = exp.indexOf('0');
+		// 	return /^\D$/.test(exp[index+1])
+		// }
+
+		console.log( confirm() )
+		console.log( confirm('23+045') )
+		console.log( confirm('23++45') )
+
+
+		/*
+			只需要一个正则表达式验证
+		*/
+
+		function confirm(expression = '1 + 1') {
+			return /^\d+|[\+{1}\d]*|[\-{1}\d]*|[\*{1}\d]*|[\/{1}\d]*\d$/.test(expression)
+		}
+
+
+
+
+		/*
+			1 栈的思想
+				压入一个字符 
+					如果为数字 前面为数字或运算符
+					如果为运算符 前面只能为数字
+				压入一个括号
+					括号需要对应
+					括号内有没有括号
+					括号内为正确的表达式
+		*/
+
+		function confirm(expression = '1 + 1') {
+			var arr = [],
+				flag = true,
+				index
+			expression = expression.replace(/ /g, '')
+			Array.prototype.forEach.call(expression, (ele) => {
+				if(!arr.length) {
+					if(calcSymbol(ele)) flag = false;
+					arr.push(ele);
+					return ;
+				}
+				arr.push(ele);
+				//如果为运算符
+				if(calcSymbol(ele) && !calcNum(arr[arr.length-2])) {
+					flag = false;
+				}
+			})
+			return flag;
+		}
+
+
+		function calcSymbol(s) {
+			return /\+|\-|\*|\//.test(s)
+		}
+
+		function calcNum(s) {
+			return /\d+/.test(s)
+		}
+
+		function confirmKuo(expression = '(1-5)') {
+			var arr = [],
+				Dfarr = [],
+				Dearr = [],
+				Zfarr = [],
+				Zearr = [],
+				Xfarr = [],
+				Xearr = [],
+				flag = true,
+				index
+			expression = expression.replace(/ /g, '')
+			Array.prototype.forEach.call(expression, (ele) => {
+				arr.push(ele)
+				if(ele === '(') {
+					index = arr.length - 1;
+					Xfarr.push(index)
+				}
+				if(ele === ')') {
+					index = arr.length - 1;
+					Xearr.push(index)
+				}
+			})
+			if(Xfarr.length !== Xearr.length) {
+				flag = false
+			} else {
+				for(var i = 0; i < Xearr.length; i++) {
+					subexp = expression.substring(Xfarr[i] + 1, Xearr[Xearr.length - 1 - i])
+					if(subexp.indexOf('(') > -1) {
+						flag = confirmKuo(subexp)
+					} else {
+						flag = confirm(subexp)
+					}
+					if(!flag) {
+						break;
+					}
+				}
+			}
+
+			return flag;
+		}
+
+		confirmKuo()
+		confirmKuo('(7-9+(8*8))')
+		confirmKuo('(7-(9+(8*8))')
+		confirmKuo('(7-)(9+(8*8))')
+
+
+		function Kuo(expression = '(4+8)-(4-3)') {
+			var arr = []
+			Array.prototype.forEach.call(expression, (ele) => {
+				if(ele === '(' || ele === ')' || ele === '[' || ele === ']' || ele === '{' || ele === '}') {
+					arr.push(ele)
+				}
+			})
+			// return /[\{[\[\d*[\(\d*\)]*\]]*\}]*/.test(arr.toString())
+			return /\{*\[*\(*\)*\]*\}*/.test(arr.toString())
+		}
+
+
+
+
+		//网上思路
+		var reg = /^[-+]?([0-9]+($|[-+*/]))*(((?<o>\))[-+]?([0-9]+[-+*/])*))/
+
+
+		/*
+			1.判断括号是否成对存在
+			2.匹配括号左右的正则表达式
+			3.四则运算的正则表达式
+		*/
+
+		function confirm(expression = '1(+1)') {
+			//判断括号是否成对存在
+			var flag = true;
+			var bracket = [];
+			Array.from(expression).forEach((ele) => {
+				if(ele === '(' || ele === '[' || ele === '{') bracket.push(ele);
+				if(ele === ')' && bracket[bracket.length - 1] === '(' || ele === ']' && bracket[bracket.length-1] === '[' || ele === '}' && bracket[bracket.length-1] === '{') bracket.pop();
+			})
+			if(bracket.length) flag = false;
+
+		
+			//匹配括号左右的正则表达式
+			var bracketReg = new RegExp(/[-+*/]*(\d*.*[\d)[-+*/]*]/);
+			flag = bracketReg.test(expression)
+
+
+			//四则运算的正则表达式
+			var calcReg = /^[-+]?([0-9]+($|[-+*/]))*(((?\))[-+]?([0-9]+[-+*/])*))/g;
+			expression = expression.replace(/\(*\)*\[*\]*\{*\}*/g, '')
+			flag = calcReg.test(expression)
+
+
+			return flag;
+		}
+	</script>
+</body>
+</html>

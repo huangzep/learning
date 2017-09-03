@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TIAN DAO</title>
+</head>
+<body>
+  <script>
+    //大数相加
+    function add(a, b) {
+      var addFlag, str1, str2, na, nb, Maxlen = [], Minlen = [], result = [];
+      addFlag = 0;
+      str1 = a.split('')
+      str2 = b.split('')
+      na = str1.length;
+      nb = str2.length;
+
+      if(na >= nb) {
+        Maxlen = Array.from(str1).reverse();
+        Minlen = Array.from(str2).reverse(); 
+      } else {
+        Maxlen = Array.from(str2).reverse();
+        Minlen = Array.from(str1).reverse();
+      }
+
+      for(var i = 0; i < Maxlen.length; i++)
+       {
+        if(Minlen.length > i) {
+          temp = parseInt(Maxlen[i]) + parseInt(Minlen[i]) + addFlag;
+        } else {
+          temp = parseInt(Maxlen[i]) + addFlag;
+        }
+
+        if(temp > 9) {
+          result[i] = temp -10;
+          if(i === (Maxlen.length - 1)) {
+            result[Maxlen.length] = 1;
+          }
+           addFlag = 1;
+        } else {
+          result.push(temp);
+          addFlag = 0;
+        }
+      }
+
+      return result.reverse().join('')
+    }
+
+     var c = add("92395","5556789");
+    console.log(c);
+
+    //大数相乘
+    function multi(a, b) {
+      var str1, str2, len1, len2, maxlen, result = [];
+      str1 = a.split('').reverse()
+      str2 = b.split('').reverse()
+      len1 = str1.length;
+      len2 = str2.length;
+
+      //因为要在下一步做累加，如果不初始化为0，result[]中的值会变为NaN
+      //因为未初始化的数组中的值为undefined
+      for(var i = 0; i < len1; i++) {
+        for(var j = 0; j < len2; j++) {
+          result[i + j] = 0;
+        }
+      }
+
+      for(var i = 0; i < len1; i++) {
+        for(var j = 0; j < len2; j++) {
+          result[i+j] += parseInt(str1[i]) * parseInt(str2[j])
+        }
+      }
+
+      for(var i = 0; i < result.length; i++) {
+        var temp = result[i];
+        if(temp > 9) {
+          result[i] = temp % 10;
+          result[i+1] += Math.floor(temp / 10)
+        } 
+      }
+
+      return result.reverse().join('')
+    }
+
+    console.log(multi('25', '25'))
+
+  </script>
+</body>
+</html>
